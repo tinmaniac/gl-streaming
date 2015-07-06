@@ -15,7 +15,6 @@
         android:theme="@style/AppTheme"
         android:hasCode="true"
         android:name="com.robotseamonsters.glstreamserver.GLStreamServerApp"
-        android:debuggable="true"
         >
 
         <!-- Our activity is the built-in NativeActivity framework class.

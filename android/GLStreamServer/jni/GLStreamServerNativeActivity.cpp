@@ -30,19 +30,20 @@ struct android_app;
 
 #define OLD_STUFF 1
 #ifdef OLD_STUFF
+#include "TeapotRenderer.h"
 #include "NDKHelper.h"
 
 //-------------------------------------------------------------------------
 //Preprocessor
 //-------------------------------------------------------------------------
-#define HELPER_CLASS_NAME "com/sample/helper/NDKHelper" //Class name of helper function
+#define HELPER_CLASS_NAME "com/robotseamonsters/helper/NDKHelper" //Class name of helper function
 //-------------------------------------------------------------------------
 //Shared state for our app.
 //-------------------------------------------------------------------------
 
 class Engine
 {
-    //TeapotRenderer renderer_;
+    TeapotRenderer renderer_;
 
     ndk_helper::GLContext* gl_context_;
 
@@ -120,8 +121,8 @@ Engine::~Engine()
  */
 void Engine::LoadResources()
 {
-    //renderer_.Init();
-    //renderer_.Bind( &tap_camera_ );
+    renderer_.Init();
+    renderer_.Bind( &tap_camera_ );
 }
 
 /**
@@ -129,7 +130,7 @@ void Engine::LoadResources()
  */
 void Engine::UnloadResources()
 {
-    //renderer_.Unload();
+    renderer_.Unload();
 }
 
 /**
@@ -162,10 +163,10 @@ int Engine::InitDisplay()
 
     //Note that screen size might have been changed
     glViewport( 0, 0, gl_context_->GetScreenWidth(), gl_context_->GetScreenHeight() );
-    //renderer_.UpdateViewport();
+    renderer_.UpdateViewport();
 
-    //tap_camera_.SetFlip( 1.f, -1.f, -1.f );
-    //tap_camera_.SetPinchTransformFactor( 2.f, 2.f, 8.f );
+    tap_camera_.SetFlip( 1.f, -1.f, -1.f );
+    tap_camera_.SetPinchTransformFactor( 2.f, 2.f, 8.f );
 
     return 0;
 }
@@ -180,12 +181,12 @@ void Engine::DrawFrame()
     {
         UpdateFPS( fFPS );
     }
-    //renderer_.Update( monitor_.GetCurrentTime() );
+    renderer_.Update( monitor_.GetCurrentTime() );
 
     // Just fill the screen with a color.
     glClearColor( 0.5f, 0.5f, 0.5f, 1.f );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    //renderer_.Render();
+    renderer_.Render();
 
     // Swap
     if( EGL_SUCCESS != gl_context_->Swap() )
