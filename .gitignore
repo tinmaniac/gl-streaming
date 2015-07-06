@@ -16,3 +16,10 @@
 *.exe
 *.out
 *.app
+sample[12]
+
+# Directories
+bin/
+libs/
+gen/
+obj/

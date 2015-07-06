@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.robotseamonsters.glstreamclient;
+package com.robotseamonsters.glstreamserver;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -30,7 +30,7 @@ import android.opengl.GLUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-public class GLStreamClientApp extends Application {
+public class GLStreamServerApp extends Application {
     public void onCreate(){
         Log.w("native-activity", "onCreate");
 

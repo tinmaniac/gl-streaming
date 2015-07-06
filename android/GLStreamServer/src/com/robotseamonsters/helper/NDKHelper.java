@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sample.helper;
+package com.robotseamonsters.helper;
 
 import java.io.File;
 import java.io.FileInputStream;

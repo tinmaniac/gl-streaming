@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.robotseamonsters.glstreamclient;
+package com.robotseamonsters.glstreamserver;
 
 import android.app.NativeActivity;
 import android.os.Bundle;
@@ -27,7 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-public class GLStreamClientNativeActivity extends NativeActivity {
+public class GLStreamServerNativeActivity extends NativeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +80,7 @@ public class GLStreamClientNativeActivity extends NativeActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     }
 
-    GLStreamClientNativeActivity _activity;
+    GLStreamServerNativeActivity _activity;
     PopupWindow _popupWindow;
     TextView _label;
 

@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <sys/socket.h>
 #include <string.h>
 
 #include "server.h"
@@ -68,8 +69,8 @@ void * server_thread(void * arg)
     }
     else
     {
-      int recive_size = recvfrom(a->sock_fd, pushptr, a->max_packet_size, 0, NULL, NULL);
-      if (recive_size == -1)
+      int receive_size = recvfrom(a->sock_fd, pushptr, a->max_packet_size, 0, NULL, NULL);
+      if (receive_size == -1)
       {
         printf("Socket recvfrom Error.\n");
         quit = TRUE;
@@ -184,7 +185,15 @@ void server_run(server_context_t *c, void *(*popper_thread)(void *))
   pthread_create(&c->popper_th, NULL, popper_thread, &c->popper_thread_arg);
 
   pthread_join(c->popper_th, NULL);
+#ifdef __ANDROID__
+  // this is wrong, but android has no pthread_cancel
+  // see stack overflow for a better solution that uses a SIGUSR1 handler
+  // that I don't have time to implement right now
+  // http://stackoverflow.com/questions/4610086/pthread-cancel-alternatives-in-android-ndk
+  pthread_kill(c->server_th, SIGKILL);
+#else
   pthread_cancel(c->server_th);
+#endif
 
   socket_close(c);
   fifo_delete(&c->fifo);

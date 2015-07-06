@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <string.h>
 #include <assert.h>
