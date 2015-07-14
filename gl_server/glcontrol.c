@@ -115,7 +115,9 @@ void init_egl(graphics_context_t *gc)
   vc_dispmanx_update_submit_sync(gc->d_update);
   check_gl_err();
   gc->surface = eglCreateWindowSurface(gc->display, config, &gc->d_window, NULL);
-#else
+#elif defined(__ANDROID__)
+  gc->screen_width = (gc->d_rect.right - gc->d_rect.left);
+  gc->screen_height = (gc->d_rect.bottom - gc->d_rect.top);
   gc->surface = eglCreateWindowSurface(gc->display, config, gc->d_window, NULL);
 #endif
   assert(gc->surface != EGL_NO_SURFACE);

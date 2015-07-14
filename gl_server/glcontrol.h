@@ -28,8 +28,10 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifdef RASPBERRY_PI
+#if defined(RASPBERRY_PI)
 # include "bcm_host.h"
+#elif defined(__ANDROID__)
+# include "android/native_window.h"
 #endif
 
 #include "GLES2/gl2.h"
@@ -44,13 +46,14 @@ typedef struct
   EGLDisplay display;
   EGLSurface surface;
   EGLContext context;
-#if defined(ANDROID)
-  EGLNativeWindowType d_window;
-#elif defined(RASPBERRY_PI)
+#if defined(RASPBERRY_PI)
   EGL_DISPMANX_WINDOW_T d_window;
   DISPMANX_ELEMENT_HANDLE_T d_element;
   DISPMANX_DISPLAY_HANDLE_T d_display;
   DISPMANX_UPDATE_HANDLE_T d_update;
+#elif defined(__ANDROID__)
+  ANativeWindow *d_window;
+  ARect   d_rect;
 #endif
 } graphics_context_t;
 

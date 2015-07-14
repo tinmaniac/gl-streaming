@@ -190,7 +190,7 @@ void server_run(server_context_t *c, void *(*popper_thread)(void *))
   // see stack overflow for a better solution that uses a SIGUSR1 handler
   // that I don't have time to implement right now
   // http://stackoverflow.com/questions/4610086/pthread-cancel-alternatives-in-android-ndk
-  pthread_kill(c->server_th, SIGKILL);
+  // pthread_kill(c->server_th, SIGUSR1);
 #else
   pthread_cancel(c->server_th);
 #endif

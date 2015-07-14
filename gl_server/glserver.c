@@ -705,11 +705,25 @@ void glse_cmd_flush()
 }
 
 
+#if defined(__ANDROID__)
+static ANativeWindow*  saved_android_window;
+static ARect     saved_android_rect;
+void glserver_android_setgc(ANativeWindow *window, ARect rect)
+{
+  saved_android_window = window;
+  saved_android_rect = rect;
+}
+#endif
+
 void * glserver_thread(void * arg)
 {
   int quit = FALSE;
   server_thread_args_t * a = (server_thread_args_t *)arg;
   static graphics_context_t gc;
+#if defined(__ANDROID__)
+  gc.d_window = saved_android_window;
+  gc.d_rect = saved_android_rect;
+#endif
   memset(&glsec_global, 0, sizeof(glsec_global));
   memset(&gc, 0, sizeof(gc));
   init_egl(&gc);

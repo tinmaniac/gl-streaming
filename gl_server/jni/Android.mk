@@ -8,9 +8,10 @@ LOCAL_SRC_FILES := ../fifo.c \
                    ../server.c \
                    ../glserver.c
 
-LOCAL_C_INCLUDES := ../
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/gl_server
+LOCAL_C_INCLUDES := ..
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/..
 
-LOCAL_CFLAGS := -O3 -Wall
+#LOCAL_CFLAGS := -O3 -Wall
+LOCAL_CFLAGS := -g -Wall
 
 include $(BUILD_STATIC_LIBRARY)

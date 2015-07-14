@@ -25,13 +25,9 @@
 #include <android_native_app_glue.h>
 #include <android/native_window_jni.h>
 #include <cpu-features.h>
+#include "NDKHelper.h"
 
 struct android_app;
-
-#define OLD_STUFF 1
-#ifdef OLD_STUFF
-#include "TeapotRenderer.h"
-#include "NDKHelper.h"
 
 //-------------------------------------------------------------------------
 //Preprocessor
@@ -41,9 +37,12 @@ struct android_app;
 //Shared state for our app.
 //-------------------------------------------------------------------------
 
+
+//#define OLD_STUFF
+#ifdef OLD_STUFF
+
 class Engine
 {
-    TeapotRenderer renderer_;
 
     ndk_helper::GLContext* gl_context_;
 
@@ -121,8 +120,8 @@ Engine::~Engine()
  */
 void Engine::LoadResources()
 {
-    renderer_.Init();
-    renderer_.Bind( &tap_camera_ );
+    //renderer_.Init();
+    //renderer_.Bind( &tap_camera_ );
 }
 
 /**
@@ -130,7 +129,7 @@ void Engine::LoadResources()
  */
 void Engine::UnloadResources()
 {
-    renderer_.Unload();
+    //renderer_.Unload();
 }
 
 /**
@@ -163,7 +162,7 @@ int Engine::InitDisplay()
 
     //Note that screen size might have been changed
     glViewport( 0, 0, gl_context_->GetScreenWidth(), gl_context_->GetScreenHeight() );
-    renderer_.UpdateViewport();
+    //renderer_.UpdateViewport();
 
     tap_camera_.SetFlip( 1.f, -1.f, -1.f );
     tap_camera_.SetPinchTransformFactor( 2.f, 2.f, 8.f );
@@ -181,12 +180,12 @@ void Engine::DrawFrame()
     {
         UpdateFPS( fFPS );
     }
-    renderer_.Update( monitor_.GetCurrentTime() );
+    //renderer_.Update( monitor_.GetCurrentTime() );
 
     // Just fill the screen with a color.
     glClearColor( 0.5f, 0.5f, 0.5f, 1.f );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    renderer_.Render();
+    //renderer_.Render();
 
     // Swap
     if( EGL_SUCCESS != gl_context_->Swap() )
@@ -441,12 +440,21 @@ void android_main( android_app* state )
 
     g_engine.SetState( state );
 
+
     //Init helper functions
     ndk_helper::JNIHelper::Init( state->activity, HELPER_CLASS_NAME );
 
     state->userData = &g_engine;
     state->onAppCmd = Engine::HandleCmd;
     state->onInputEvent = Engine::HandleInput;
+
+  __android_log_print(ANDROID_LOG_DEBUG, "GLSTREAM",  "window:  %08x, rect: %d %d %d %d",
+    (unsigned int)(state->window),
+    state->contentRect.left,
+    state->contentRect.top,
+    state->contentRect.right,
+    state->contentRect.bottom);
+
 
 #ifdef USE_NDK_PROFILER
     monstartup("libGLStreamServerNativeActivity.so");
@@ -512,6 +520,7 @@ void android_main( android_app* state )
  */
 void android_main( android_app* state )
 {
+  ndk_helper::GLContext* gl_context;
   static server_context_t sc;
   int opt;
   char my_ip[GLS_STRING_SIZE_PLUS];
@@ -520,11 +529,29 @@ void android_main( android_app* state )
   uint16_t his_port = 12346;
   strncpy(my_ip, "127.0.0.1", GLS_STRING_SIZE);
   strncpy(his_ip, "127.0.0.1", GLS_STRING_SIZE);
+
+  app_dummy();
+
+#ifdef USE_NDK_PROFILER
+  monstartup("libGLStreamServerNativeActivity.so");
+#endif
+
+  gl_context = ndk_helper::GLContext::GetInstance();
+  gl_context->Init(state->window);
+
+  __android_log_print(ANDROID_LOG_DEBUG, "GLSTREAM",  "window:  %08x, rect: %d %d %d %d",
+    (unsigned int)(state->window),
+    state->contentRect.left,
+    state->contentRect.top,
+    state->contentRect.right,
+    state->contentRect.bottom);
+
   // TODO: Get arguments from Android UI
   server_init(&sc);
   set_server_address_port(&sc, my_ip, my_port);
   set_client_address_port(&sc, his_ip, his_port);
 
+  glserver_android_setgc(state->window, state->contentRect);
   server_run(&sc, glserver_thread);
 
   return;

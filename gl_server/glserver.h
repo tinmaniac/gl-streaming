@@ -54,6 +54,9 @@ extern "C" {
 
 extern glse_context_t glsec_global;
 void * glserver_thread(void * arg);
+#if defined(__ANDROID__)
+void glserver_android_setgc(ANativeWindow *window, ARect rect);
+#endif
 
 #ifdef __cplusplus
 }
